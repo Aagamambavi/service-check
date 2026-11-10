@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Service Check{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <p class="label">Website and API monitoring</p>
+    <h1>Check the availability of your online services.</h1>
+
+    <p class="intro">
+        Service Check monitors public websites and API endpoints, records their
+        status, and helps users identify outages and recoveries.
+    </p>
+
+    {% if current_user.is_authenticated %}
+    <div class="account-box">
+        <strong>Signed in as {{ current_user.email }}</strong>
+        <p>Your Service Check account is ready.</p>
+    </div>
+    {% else %}
+    <div class="actions">
+        <a class="primary-button" href="{{ url_for('register') }}">
+            Create an account
+        </a>
+
+        <a class="secondary-button" href="{{ url_for('login') }}">
+            Log in
+        </a>
+    </div>
+    {% endif %}
+</section>
+
+<section class="features">
+    <div class="card">
+        <h2>Endpoint checks</h2>
+        <p>Monitor public websites, APIs, and health endpoints.</p>
+    </div>
+
+    <div class="card">
+        <h2>Status history</h2>
+        <p>Store results so availability and outages can be reviewed.</p>
+    </div>
+
+    <div class="card">
+        <h2>Incident tracking</h2>
+        <p>Record service interruptions and confirm when recovery occurs.</p>
+    </div>
+</section>
+{% endblock %}
