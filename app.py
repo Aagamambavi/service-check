@@ -28,6 +28,7 @@ if database_url.startswith("postgres://"):
     database_url = database_url.replace("postgres://", "postgresql://", 1)
 
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", secrets.token_hex(32))
+app.config["SESSION_COOKIE_SECURE"] = True
 app.config["SQLALCHEMY_DATABASE_URI"] = database_url
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
