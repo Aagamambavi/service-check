@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}Monitored Services | Service Check{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <h1>Monitored Services</h1>
+    <p>Save a website or API endpoint and search your saved services.</p>
+</section>
+
+<section class="card">
+    <h2>Add a service</h2>
+
+    <form method="post" action="{{ url_for('services') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
+        <p>
+            <label for="name">Service name</label><br>
+            <input id="name" name="name" maxlength="100" required>
+        </p>
+
+        <p>
+            <label for="url">Website or API URL</label><br>
+            <input id="url" name="url" type="url" maxlength="2048" placeholder="https://example.com/" required>
+        </p>
+
+        <p>
+            <label for="expected_status">Expected HTTP status</label><br>
+            <input id="expected_status" name="expected_status" type="number" min="100" max="599" value="200" required>
+        </p>
+
+        <p>
+            <label for="timeout_seconds">Timeout in seconds</label><br>
+            <input id="timeout_seconds" name="timeout_seconds" type="number" min="1" max="30" value="10" required>
+        </p>
+
+        <p>
+            <label for="expected_text">Expected response text (optional)</label><br>
+            <input id="expected_text" name="expected_text" maxlength="250">
+        </p>
+
+        <button class="primary-button" type="submit">Save service</button>
+    </form>
+</section>
+
+<section class="card">
+    <h2>Find a saved service</h2>
+
+    <form id="search-form" data-api="{{ url_for('search_services') }}">
+        <label for="query">Search by service name</label><br>
+        <input id="query" name="query" maxlength="100">
+        <button class="secondary-button" type="submit">Search</button>
+    </form>
+
+    <p id="search-message" role="status"></p>
+    <ul id="service-results"></ul>
+</section>
+
+<script>
+    const searchForm = document.getElementById("search-form");
+    const searchInput = document.getElementById("query");
+    const searchMessage = document.getElementById("search-message");
+    const results = document.getElementById("service-results");
+    let latestSearch = 0;
+
+    async function loadServices() {
+        const searchNumber = ++latestSearch;
+        const params = new URLSearchParams({ query: searchInput.value });
+
+        results.replaceChildren();
+        searchMessage.textContent = "Loading services...";
+
+        try {
+            const response = await fetch(`${searchForm.dataset.api}?${params}`);
+            const data = await response.json();
+
+            if (searchNumber !== latestSearch) return;
+
+            if (!response.ok) {
+                searchMessage.textContent = data.error || "Search failed.";
+                return;
+            }
+
+            searchMessage.textContent = data.services.length
+                ? `Showing ${data.services.length} result(s).`
+                : "No matching services found.";
+
+            for (const service of data.services) {
+                const item = document.createElement("li");
+                item.textContent = `${service.name} (${service.url})`;
+                results.appendChild(item);
+            }
+        } catch {
+            if (searchNumber === latestSearch) {
+                searchMessage.textContent = "Could not load services. Try again.";
+            }
+        }
+    }
+
+    searchForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        loadServices();
+    });
+
+    loadServices();
+</script>
+{% endblock %}
