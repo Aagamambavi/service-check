@@ -5,11 +5,11 @@
 {% block content %}
 <section class="hero">
     <p class="label">Website and API monitoring</p>
-    <h1>Check the availability of your online services.</h1>
+    <h1>Save and check service endpoints.</h1>
 
     <p class="intro">
-        Service Check monitors public websites and API endpoints, records their
-        status, and helps users identify outages and recoveries.
+        Save and search website or API endpoints. Run a live check against
+        the Service Check demo endpoint to see its status and response time.
     </p>
 
     {% if current_user.is_authenticated %}
@@ -33,17 +33,17 @@
 <section class="features">
     <div class="card">
         <h2>Endpoint checks</h2>
-        <p>Monitor public websites, APIs, and health endpoints.</p>
+        <p>Check the demo endpoint on demand.</p>
     </div>
 
     <div class="card">
-        <h2>Status history</h2>
-        <p>Store results so availability and outages can be reviewed.</p>
+        <h2>Check results</h2>
+        <p>Review the latest observed status and response time.</p>
     </div>
 
     <div class="card">
         <h2>Incident tracking</h2>
-        <p>Record service interruptions and confirm when recovery occurs.</p>
+        <p>Scheduled checks and incident tracking are planned.</p>
     </div>
 </section>
 {% endblock %}
